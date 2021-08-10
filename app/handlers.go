@@ -28,3 +28,7 @@ func getCustomerById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-type", "application/json")
 	json.NewEncoder(w).Encode(&customer)
 }
+
+func createCustomer(w http.ResponseWriter, r *http.Request) {
+
+}
