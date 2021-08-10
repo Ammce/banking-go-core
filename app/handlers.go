@@ -5,30 +5,16 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/Ammce/go-banking-core/service"
 )
 
-type Customer struct {
-	Name    string
-	City    string
-	Zipcode int16
+type CustomerHandlers struct {
+	service service.CustomerService
 }
 
-func getAllCustomers(w http.ResponseWriter, r *http.Request) {
-	customer := []Customer{{Name: "Amel", City: "Belgrade", Zipcode: 11000}}
+func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+	customers, _ := ch.service.GetAllCustomers()
 	w.Header().Add("Content-type", "application/json")
 	fmt.Println(r.Header.Get("Content-type"))
-	json.NewEncoder(w).Encode(&customer)
-}
-
-func getCustomerById(w http.ResponseWriter, r *http.Request) {
-	customerId := mux.Vars(r)["customerId"]
-	fmt.Println(customerId)
-	customer := Customer{Name: "Amel", City: "Belgrade", Zipcode: 11000}
-	w.Header().Add("Content-type", "application/json")
-	json.NewEncoder(w).Encode(&customer)
-}
-
-func createCustomer(w http.ResponseWriter, r *http.Request) {
-
+	json.NewEncoder(w).Encode(&customers)
 }
