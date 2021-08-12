@@ -19,3 +19,7 @@ func (ar AccountRepositoryDB) Save(a *Account) (*Account, *errs.AppError) {
 	return a, nil
 
 }
+
+func NewAccountingRepositoryDB(client *gorm.DB) AccountRepositoryDB {
+	return AccountRepositoryDB{db: client}
+}

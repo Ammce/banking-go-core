@@ -3,7 +3,6 @@ package domain
 import (
 	"github.com/Ammce/go-banking-core/errs"
 	"github.com/Ammce/go-banking-core/logger"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -37,15 +36,7 @@ func (p CustomerRepositoryDB) FindById(id int32) (*Customer, *errs.AppError) {
 	return &customer, nil
 }
 
-func NewCustomerREpositoryDB() CustomerRepositoryDB {
-	dsn := "host=localhost user=postgres password=postgres dbname=banking port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	db.AutoMigrate()
+func NewCustomerREpositoryDB(client *gorm.DB) CustomerRepositoryDB {
 
-	if err != nil {
-		logger.Error("error connectin go the database")
-		panic(err)
-	}
-
-	return CustomerRepositoryDB{db}
+	return CustomerRepositoryDB{db: client}
 }
