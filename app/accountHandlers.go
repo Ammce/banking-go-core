@@ -15,7 +15,7 @@ type AccountHandlers struct {
 
 func (ah *AccountHandlers) createAccount(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	customerId := vars["customer_id"]
+	customerId := vars["id"]
 	var body dto.CreateAccountDTO
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {

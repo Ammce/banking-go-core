@@ -1,5 +1,9 @@
 package dto
 
+import (
+	"github.com/google/uuid"
+)
+
 type AccountResponse struct {
-	AccountId string `json:"account_id"`
+	AccountId uuid.UUID `json:"account_id"`
 }

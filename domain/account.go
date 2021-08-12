@@ -3,10 +3,11 @@ package domain
 import (
 	"github.com/Ammce/go-banking-core/dto"
 	"github.com/Ammce/go-banking-core/errs"
+	"github.com/google/uuid"
 )
 
 type Account struct {
-	AccountId   string
+	AccountId   uuid.UUID `json:"account_id"`
 	CustomerId  string
 	OpeningDate string
 	AccountType string

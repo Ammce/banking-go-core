@@ -16,9 +16,7 @@ type DefaultAccountService struct {
 
 func (as DefaultAccountService) CreateAccount(adto *dto.CreateAccountDTO) (*dto.AccountResponse, *errs.AppError) {
 	newAcc := domain.Account{
-		AccountId:   "",
 		CustomerId:  adto.CustomerId,
-		OpeningDate: "",
 		AccountType: adto.AccountType,
 		Amount:      int64(adto.Amount),
 		Status:      "1",
@@ -28,4 +26,8 @@ func (as DefaultAccountService) CreateAccount(adto *dto.CreateAccountDTO) (*dto.
 		return nil, err
 	}
 	return acc.ToAccountResponseDto(), nil
+}
+
+func NewAccountService(repo domain.AccountRepository) DefaultAccountService {
+	return DefaultAccountService{repo: repo}
 }
