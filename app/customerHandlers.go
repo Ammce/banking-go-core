@@ -34,5 +34,7 @@ func (ch *CustomerHandlers) getCustomerById(w http.ResponseWriter, r *http.Reque
 func writeReponse(w http.ResponseWriter, code int, data interface{}) {
 	w.Header().Add("Content-type", "application/json")
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(data)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		panic(err)
+	}
 }
