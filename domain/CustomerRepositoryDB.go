@@ -3,6 +3,7 @@ package domain
 import (
 	"fmt"
 
+	"github.com/Ammce/go-banking-core/errs"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -22,13 +23,13 @@ func (p CustomerRepositoryDB) FindAll() ([]Customer, error) {
 	return customers, nil
 }
 
-func (p CustomerRepositoryDB) FindById(id int32) (*Customer, error) {
+func (p CustomerRepositoryDB) FindById(id int32) (*Customer, *errs.AppError) {
 	var err error
 	customer := Customer{}
 	err = p.db.Where("id = ?", id).First(&customer).Error
 	if err != nil {
-		fmt.Println("Error happened while getting the results")
-		return nil, err
+		fmt.Println("Error happened while getting the results " + err.Error())
+		return nil, errs.NewNotFoundError("Customer not found")
 	}
 	return &customer, nil
 }

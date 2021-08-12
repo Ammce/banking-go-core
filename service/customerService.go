@@ -1,10 +1,13 @@
 package service
 
-import "github.com/Ammce/go-banking-core/domain"
+import (
+	"github.com/Ammce/go-banking-core/domain"
+	"github.com/Ammce/go-banking-core/errs"
+)
 
 type CustomerService interface {
 	GetAllCustomers() ([]domain.Customer, error)
-	GetCustomerById(id int32) (*domain.Customer, error)
+	GetCustomerById(id int32) (*domain.Customer, *errs.AppError)
 }
 
 type DefaultCustomerService struct {
@@ -15,7 +18,7 @@ func (s DefaultCustomerService) GetAllCustomers() ([]domain.Customer, error) {
 	return s.repo.FindAll()
 }
 
-func (s DefaultCustomerService) GetCustomerById(id int32) (*domain.Customer, error) {
+func (s DefaultCustomerService) GetCustomerById(id int32) (*domain.Customer, *errs.AppError) {
 	return s.repo.FindById(id)
 }
 

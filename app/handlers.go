@@ -24,8 +24,11 @@ func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Reque
 func (ch *CustomerHandlers) getCustomerById(w http.ResponseWriter, r *http.Request) {
 	customerId64, _ := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
 	customerId32 := int32(customerId64)
-	customer, _ := ch.service.GetCustomerById(customerId32)
+	customer, err := ch.service.GetCustomerById(customerId32)
+	if err != nil {
+		w.Header().Add("Content-type", "application/json")
+		json.NewEncoder(w).Encode(err.AsMessage())
+	}
 	w.Header().Add("Content-type", "application/json")
-	fmt.Println(r.Header.Get("Content-type"))
 	json.NewEncoder(w).Encode(&customer)
 }

@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/Ammce/go-banking-core/errs"
+
 type Customer struct {
 	Id          string
 	Name        string
@@ -11,5 +13,5 @@ type Customer struct {
 
 type CustomerRepository interface {
 	FindAll() ([]Customer, error)
-	FindById(id int32) (*Customer, error)
+	FindById(id int32) (*Customer, *errs.AppError)
 }
