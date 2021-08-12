@@ -17,8 +17,9 @@ func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Reque
 	customers, err := ch.service.GetAllCustomers()
 	if err != nil {
 		writeReponse(w, err.Code, err.AsMessage())
+	} else {
+		writeReponse(w, http.StatusOK, &customers)
 	}
-	writeReponse(w, http.StatusOK, &customers)
 }
 
 func (ch *CustomerHandlers) getCustomerById(w http.ResponseWriter, r *http.Request) {
@@ -27,8 +28,10 @@ func (ch *CustomerHandlers) getCustomerById(w http.ResponseWriter, r *http.Reque
 	customer, err := ch.service.GetCustomerById(customerId32)
 	if err != nil {
 		writeReponse(w, err.Code, err.AsMessage())
+	} else {
+		writeReponse(w, http.StatusOK, &customer)
 	}
-	writeReponse(w, http.StatusOK, &customer)
+
 }
 
 func writeReponse(w http.ResponseWriter, code int, data interface{}) {
