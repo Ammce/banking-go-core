@@ -22,3 +22,13 @@ type AccountRepository interface {
 func (a Account) ToAccountResponseDto() *dto.AccountResponse {
 	return &dto.AccountResponse{AccountId: a.AccountId}
 }
+
+func NewAccount(customerId, accountType string, amount int64) Account {
+	return Account{
+		CustomerId:  customerId,
+		OpeningDate: "2006-01-02 15:04:05",
+		AccountType: accountType,
+		Amount:      amount,
+		Status:      "1",
+	}
+}

@@ -15,12 +15,11 @@ type DefaultAccountService struct {
 }
 
 func (as DefaultAccountService) CreateAccount(adto *dto.CreateAccountDTO) (*dto.AccountResponse, *errs.AppError) {
-	newAcc := domain.Account{
-		CustomerId:  adto.CustomerId,
-		AccountType: adto.AccountType,
-		Amount:      int64(adto.Amount),
-		Status:      "1",
+	validationError := adto.Validate()
+	if validationError != nil {
+		return nil, validationError
 	}
+	newAcc := domain.NewAccount(adto.CustomerId, adto.AccountType, int64(adto.Amount))
 	acc, err := as.repo.Save(&newAcc)
 	if err != nil {
 		return nil, err
