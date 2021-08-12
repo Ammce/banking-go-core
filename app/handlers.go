@@ -27,8 +27,10 @@ func (ch *CustomerHandlers) getCustomerById(w http.ResponseWriter, r *http.Reque
 	customer, err := ch.service.GetCustomerById(customerId32)
 	if err != nil {
 		w.Header().Add("Content-type", "application/json")
+		w.WriteHeader(err.Code)
 		json.NewEncoder(w).Encode(err.AsMessage())
 	}
 	w.Header().Add("Content-type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(&customer)
 }
