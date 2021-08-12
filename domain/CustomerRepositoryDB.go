@@ -1,9 +1,8 @@
 package domain
 
 import (
-	"fmt"
-
 	"github.com/Ammce/go-banking-core/errs"
+	"github.com/Ammce/go-banking-core/logger"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -21,7 +20,7 @@ func (p CustomerRepositoryDB) FindAll(status string) ([]Customer, *errs.AppError
 		err = p.db.Find(&customers, "status = ?", status).Error
 	}
 	if err != nil {
-		fmt.Println("Error happened while getting the results")
+		logger.Error("Error happened while getting the results")
 		return nil, errs.NewNotFoundError("Customers not found")
 	}
 	return customers, nil
@@ -32,7 +31,7 @@ func (p CustomerRepositoryDB) FindById(id int32) (*Customer, *errs.AppError) {
 	customer := Customer{}
 	err = p.db.Where("id = ?", id).First(&customer).Error
 	if err != nil {
-		fmt.Println("Error happened while getting the results " + err.Error())
+		logger.Error("Error happened while getting the results")
 		return nil, errs.NewNotFoundError("Customer not found")
 	}
 	return &customer, nil
@@ -44,7 +43,7 @@ func NewCustomerREpositoryDB() CustomerRepositoryDB {
 	db.AutoMigrate()
 
 	if err != nil {
-		fmt.Println("error connectin go the database")
+		logger.Error("error connectin go the database")
 		panic(err)
 	}
 

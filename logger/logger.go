@@ -2,28 +2,28 @@ package logger
 
 import "go.uber.org/zap"
 
-var logger *zap.Logger
+var log *zap.Logger
 
 func init() {
 	var err error
-	logger, err = zap.NewProduction(zap.AddCallerSkip(1))
+	log, err = zap.NewProduction(zap.AddCallerSkip(1))
 	if err != nil {
 		panic(err)
 	}
 }
 
 func Info(message string, args ...zap.Field) {
-	logger.Info(message, args...)
+	log.Info(message, args...)
 }
 
 func Warn(message string, args ...zap.Field) {
-	logger.Warn(message, args...)
+	log.Warn(message, args...)
 }
 
 func Debug(message string, args ...zap.Field) {
-	logger.Debug(message, args...)
+	log.Debug(message, args...)
 }
 
 func Error(message string, args ...zap.Field) {
-	logger.Error(message, args...)
+	log.Error(message, args...)
 }
