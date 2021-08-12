@@ -12,13 +12,13 @@ type CustomerRepositoryDB struct {
 	db *gorm.DB
 }
 
-func (p CustomerRepositoryDB) FindAll() ([]Customer, error) {
+func (p CustomerRepositoryDB) FindAll() ([]Customer, *errs.AppError) {
 	var err error
 	customers := []Customer{}
 	err = p.db.Find(&customers).Error
 	if err != nil {
 		fmt.Println("Error happened while getting the results")
-		return []Customer{}, nil
+		return nil, errs.NewNotFoundError("Customers not found")
 	}
 	return customers, nil
 }
