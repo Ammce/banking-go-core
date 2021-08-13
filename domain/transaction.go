@@ -6,8 +6,8 @@ import (
 )
 
 type Transaction struct {
-	TransactionID   uuid.UUID `json:"transaction_id"`
-	AccountID       uuid.UUID ` json:"account_id"`
+	TransactionID   uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+	AccountID       uuid.UUID `json:"account_id"`
 	Amount          int64     `json:"amount"`
 	TransactionDate string    `json:"transaction_date"`
 }
