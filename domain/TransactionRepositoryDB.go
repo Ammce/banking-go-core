@@ -16,3 +16,9 @@ func (r TransactionRepositoryDB) Create(t Transaction) (*Transaction, *errs.AppE
 	}
 	return &t, nil
 }
+
+func NewTransactionRepositoryDB(db *gorm.DB) TransactionRepositoryDB {
+	return TransactionRepositoryDB{
+		db: db,
+	}
+}
