@@ -5,12 +5,28 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Ammce/go-banking-core/dto/customerDTO"
 	"github.com/Ammce/go-banking-core/service"
 	"github.com/gorilla/mux"
 )
 
 type CustomerHandlers struct {
 	service service.CustomerService
+}
+
+func (ch *CustomerHandlers) createCustomer(w http.ResponseWriter, r *http.Request) {
+	var body customerDTO.CreateCustomer
+	err := json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		writeReponse(w, http.StatusBadRequest, err)
+	} else {
+		r, err := ch.service.CreateCustomer(body)
+		if err != nil {
+			writeReponse(w, err.Code, err)
+		} else {
+			writeReponse(w, http.StatusOK, r)
+		}
+	}
 }
 
 func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {

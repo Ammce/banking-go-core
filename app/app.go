@@ -27,6 +27,7 @@ func Start() {
 
 	router.HandleFunc("/transactions", th.createTransaction).Methods(http.MethodPost)
 	router.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
+	router.HandleFunc("/customers", ch.createCustomer).Methods(http.MethodPost)
 	router.HandleFunc("/customers/{id:[0-9]+}", ch.getCustomerById).Methods(http.MethodGet)
 	router.HandleFunc("/customers/{id:[0-9]+}/account", ah.createAccount).Methods(http.MethodPost)
 
