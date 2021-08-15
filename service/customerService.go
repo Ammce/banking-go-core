@@ -8,7 +8,7 @@ import (
 
 type CustomerService interface {
 	CreateCustomer(customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError)
-	GetAllCustomers(status string) ([]domain.Customer, *errs.AppError)
+	GetAllCustomers(status string) (*[]customerDTO.CustomerResponse, *errs.AppError)
 	GetCustomerById(id int32) (*customerDTO.CustomerResponse, *errs.AppError)
 }
 
@@ -29,23 +29,16 @@ func (cs DefaultCustomerService) CreateCustomer(customer customerDTO.CreateCusto
 	return c.AsResponseDto(), nil
 }
 
-func (s DefaultCustomerService) GetAllCustomers(status string) ([]domain.Customer, *errs.AppError) {
-	if status == "active" {
-		status = "1"
-	} else if status == "inactive" {
-		status = "0"
-	} else {
-		status = ""
-	}
+func (s DefaultCustomerService) GetAllCustomers(status string) (*[]customerDTO.CustomerResponse, *errs.AppError) {
 	customers, err := s.repo.FindAll(status)
 	if err != nil {
 		return nil, err
 	}
-	customersResponse := make([]domain.Customer, 0)
+	customersResponse := make([]customerDTO.CustomerResponse, 0)
 	for _, customer := range customers {
-		customersResponse = append(customersResponse, customer)
+		customersResponse = append(customersResponse, *customer.AsResponseDto())
 	}
-	return customersResponse, nil
+	return &customersResponse, nil
 }
 
 func (s DefaultCustomerService) GetCustomerById(id int32) (*customerDTO.CustomerResponse, *errs.AppError) {
