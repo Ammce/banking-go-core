@@ -48,7 +48,17 @@ func (ch *CustomerHandlers) getCustomerById(w http.ResponseWriter, r *http.Reque
 	} else {
 		writeReponse(w, http.StatusOK, &customer)
 	}
+}
 
+func (ch *CustomerHandlers) deleteCustomerById(w http.ResponseWriter, r *http.Request) {
+	customerId64, _ := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
+	customerId32 := int32(customerId64)
+	err := ch.service.DeleteCustomerById(customerId32)
+	if err != nil {
+		writeReponse(w, err.Code, err.AsMessage())
+	} else {
+		writeReponse(w, http.StatusOK, nil)
+	}
 }
 
 func writeReponse(w http.ResponseWriter, code int, data interface{}) {

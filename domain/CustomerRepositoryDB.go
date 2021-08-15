@@ -10,21 +10,21 @@ type CustomerRepositoryDB struct {
 	db *gorm.DB
 }
 
-func (cp CustomerRepositoryDB) Create(customer Customer) (*Customer, *errs.AppError) {
-	err := cp.db.Create(&customer).Error
+func (cr CustomerRepositoryDB) Create(customer Customer) (*Customer, *errs.AppError) {
+	err := cr.db.Create(&customer).Error
 	if err != nil {
 		return nil, errs.NewUnexpectedError("Creation of customer failed")
 	}
 	return &customer, nil
 }
 
-func (p CustomerRepositoryDB) FindAll(status string) ([]Customer, *errs.AppError) {
+func (cr CustomerRepositoryDB) FindAll(status string) ([]Customer, *errs.AppError) {
 	var err error
 	customers := []Customer{}
 	if status == "" {
-		err = p.db.Find(&customers).Error
+		err = cr.db.Find(&customers).Error
 	} else {
-		err = p.db.Find(&customers, "status = ?", status).Error
+		err = cr.db.Find(&customers, "status = ?", status).Error
 	}
 	if err != nil {
 		logger.Error("Error happened while getting the results")
@@ -33,15 +33,23 @@ func (p CustomerRepositoryDB) FindAll(status string) ([]Customer, *errs.AppError
 	return customers, nil
 }
 
-func (p CustomerRepositoryDB) FindById(id int32) (*Customer, *errs.AppError) {
+func (cr CustomerRepositoryDB) FindById(id int32) (*Customer, *errs.AppError) {
 	var err error
 	customer := Customer{}
-	err = p.db.Where("id = ?", id).First(&customer).Error
+	err = cr.db.Where("id = ?", id).First(&customer).Error
 	if err != nil {
 		logger.Error("Error happened while getting the results")
 		return nil, errs.NewNotFoundError("Customer not found")
 	}
 	return &customer, nil
+}
+
+func (cr CustomerRepositoryDB) DeleteById(id int32) *errs.AppError {
+	err := cr.db.Delete(&Customer{}, id).Error
+	if err != nil {
+		return errs.NewNotFoundError("Database deletition error")
+	}
+	return nil
 }
 
 func NewCustomerREpositoryDB(client *gorm.DB) CustomerRepositoryDB {

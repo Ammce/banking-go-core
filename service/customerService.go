@@ -10,6 +10,7 @@ type CustomerService interface {
 	CreateCustomer(customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError)
 	GetAllCustomers(status string) (*[]customerDTO.CustomerResponse, *errs.AppError)
 	GetCustomerById(id int32) (*customerDTO.CustomerResponse, *errs.AppError)
+	DeleteCustomerById(id int32) *errs.AppError
 }
 
 type DefaultCustomerService struct {
@@ -47,6 +48,13 @@ func (s DefaultCustomerService) GetCustomerById(id int32) (*customerDTO.Customer
 		return nil, err
 	}
 	return c.AsResponseDto(), nil
+}
+func (s DefaultCustomerService) DeleteCustomerById(id int32) *errs.AppError {
+	err := s.repo.DeleteById(id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func NewCustomerService(repo domain.CustomerRepository) DefaultCustomerService {
