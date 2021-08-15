@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"strconv"
 
+	customer "github.com/Ammce/go-banking-core/domain/Customer"
 	"github.com/Ammce/go-banking-core/dto/customerDTO"
-	"github.com/Ammce/go-banking-core/service"
 	"github.com/gorilla/mux"
 )
 
 type CustomerHandlers struct {
-	service service.CustomerService
+	service customer.CustomerService
 }
 
 func (ch *CustomerHandlers) createCustomer(w http.ResponseWriter, r *http.Request) {

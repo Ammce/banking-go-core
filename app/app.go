@@ -4,7 +4,9 @@ import (
 	"log"
 	"net/http"
 
+	customerAdapter "github.com/Ammce/go-banking-core/adapters/Customer"
 	"github.com/Ammce/go-banking-core/domain"
+	customerPort "github.com/Ammce/go-banking-core/domain/Customer"
 	"github.com/Ammce/go-banking-core/logger"
 	"github.com/Ammce/go-banking-core/service"
 	"github.com/gorilla/mux"
@@ -17,11 +19,11 @@ func Start() {
 
 	dbClient := createDatabase()
 
-	customerRepositoryDB := domain.NewCustomerREpositoryDB(dbClient)
+	customerRepositoryDB := customerAdapter.NewCustomerRepositoryDB(dbClient)
 	accountRepositoryDB := domain.NewAccountingRepositoryDB(dbClient)
 	transactionRepositoryDB := domain.NewTransactionRepositoryDB(dbClient)
 
-	ch := CustomerHandlers{service: service.NewCustomerService(customerRepositoryDB)}
+	ch := CustomerHandlers{service: customerPort.NewCustomerService(customerRepositoryDB)}
 	ah := AccountHandlers{service: service.NewAccountService(accountRepositoryDB)}
 	th := TransactionHandlers{service: service.NewTransactionService(transactionRepositoryDB)}
 
