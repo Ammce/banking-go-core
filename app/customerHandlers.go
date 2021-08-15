@@ -29,6 +29,22 @@ func (ch *CustomerHandlers) createCustomer(w http.ResponseWriter, r *http.Reques
 	}
 }
 
+func (ch *CustomerHandlers) updateCustomer(w http.ResponseWriter, r *http.Request) {
+	var body customerDTO.CreateCustomer
+	err := json.NewDecoder(r.Body).Decode(&body)
+	customerId := getCustomerIdFromRequest(r)
+	if err != nil {
+		writeReponse(w, http.StatusBadRequest, err)
+	} else {
+		r, err := ch.service.UpdateCustomer(customerId, body)
+		if err != nil {
+			writeReponse(w, err.Code, err)
+		} else {
+			writeReponse(w, http.StatusOK, r)
+		}
+	}
+}
+
 func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
 	status := r.URL.Query().Get("status")
 	customers, err := ch.service.GetAllCustomers(status)
@@ -67,4 +83,10 @@ func writeReponse(w http.ResponseWriter, code int, data interface{}) {
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		panic(err)
 	}
+}
+
+func getCustomerIdFromRequest(r *http.Request) int32 {
+	customerId64, _ := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
+	customerId32 := int32(customerId64)
+	return customerId32
 }

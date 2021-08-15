@@ -33,6 +33,7 @@ func (c Customer) AsResponseDto() *customerDTO.CustomerResponse {
 
 type CustomerRepository interface {
 	Create(customer Customer) (*Customer, *errs.AppError)
+	Update(id int32, customer Customer) (*Customer, *errs.AppError)
 	FindAll(status string) ([]Customer, *errs.AppError)
 	FindById(id int32) (*Customer, *errs.AppError)
 	DeleteById(id int32) *errs.AppError

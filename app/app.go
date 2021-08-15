@@ -30,6 +30,7 @@ func Start() {
 	router.HandleFunc("/customers", ch.createCustomer).Methods(http.MethodPost)
 	router.HandleFunc("/customers/{id:[0-9]+}", ch.getCustomerById).Methods(http.MethodGet)
 	router.HandleFunc("/customers/{id:[0-9]+}", ch.deleteCustomerById).Methods(http.MethodDelete)
+	router.HandleFunc("/customers/{id:[0-9]+}", ch.updateCustomer).Methods(http.MethodPatch)
 	router.HandleFunc("/customers/{id:[0-9]+}/account", ah.createAccount).Methods(http.MethodPost)
 
 	log.Fatal(http.ListenAndServe("localhost:8080", router))

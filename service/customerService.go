@@ -8,6 +8,7 @@ import (
 
 type CustomerService interface {
 	CreateCustomer(customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError)
+	UpdateCustomer(id int32, customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError)
 	GetAllCustomers(status string) (*[]customerDTO.CustomerResponse, *errs.AppError)
 	GetCustomerById(id int32) (*customerDTO.CustomerResponse, *errs.AppError)
 	DeleteCustomerById(id int32) *errs.AppError
@@ -24,6 +25,19 @@ func (cs DefaultCustomerService) CreateCustomer(customer customerDTO.CreateCusto
 	}
 	domainCustomer := domain.NewCustomer(customer)
 	c, err := cs.repo.Create(domainCustomer)
+	if err != nil {
+		return nil, err
+	}
+	return c.AsResponseDto(), nil
+}
+
+func (cs DefaultCustomerService) UpdateCustomer(id int32, customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError) {
+	verr := customer.Validate()
+	if verr != nil {
+		return nil, verr
+	}
+	domainCustomer := domain.NewCustomer(customer)
+	c, err := cs.repo.Update(id, domainCustomer)
 	if err != nil {
 		return nil, err
 	}

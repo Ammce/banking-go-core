@@ -18,6 +18,15 @@ func (cr CustomerRepositoryDB) Create(customer Customer) (*Customer, *errs.AppEr
 	return &customer, nil
 }
 
+func (cr CustomerRepositoryDB) Update(id int32, customer Customer) (*Customer, *errs.AppError) {
+
+	err := cr.db.Model(&Customer{}).Where("id = ?", id).Updates(Customer{Name: customer.Name, Zipcode: customer.Zipcode, City: customer.City})
+	if err != nil {
+		return nil, errs.NewUnexpectedError("Update of customer failed")
+	}
+	return &customer, nil
+}
+
 func (cr CustomerRepositoryDB) FindAll(status string) ([]Customer, *errs.AppError) {
 	var err error
 	customers := []Customer{}
