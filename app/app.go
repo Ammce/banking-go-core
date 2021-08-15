@@ -36,7 +36,9 @@ func Start() {
 func createDatabase() *gorm.DB {
 	dsn := "host=localhost user=postgres password=postgres dbname=banking port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	db.AutoMigrate()
+
+	db.AutoMigrate(&domain.Customer{})
+	// db.AutoMigrate(&domain.Customer{}, &domain.Account{}, domain.Transaction{})
 
 	if err != nil {
 		logger.Error("error connectin go the database")

@@ -13,9 +13,6 @@ func (s CustomerRepositoryStub) FindById(id int32) (*Customer, error) {
 }
 
 func NewCustomerRepositoryStub() CustomerRepositoryStub {
-	customers := []Customer{
-		{"1001", "Ammce", "Novi Pazar", "110011", "2000-01-01", "1"},
-		{"1002", "Extra", "New York", "110011", "2000-01-01", "1"},
-	}
+	customers := []Customer{}
 	return CustomerRepositoryStub{customers}
 }

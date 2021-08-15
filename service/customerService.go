@@ -2,20 +2,19 @@ package service
 
 import (
 	"github.com/Ammce/go-banking-core/domain"
-	"github.com/Ammce/go-banking-core/dto"
 	"github.com/Ammce/go-banking-core/errs"
 )
 
 type CustomerService interface {
-	GetAllCustomers(status string) ([]dto.CustomerResponse, *errs.AppError)
-	GetCustomerById(id int32) (*dto.CustomerResponse, *errs.AppError)
+	GetAllCustomers(status string) ([]domain.Customer, *errs.AppError)
+	GetCustomerById(id int32) (*domain.Customer, *errs.AppError)
 }
 
 type DefaultCustomerService struct {
 	repo domain.CustomerRepository
 }
 
-func (s DefaultCustomerService) GetAllCustomers(status string) ([]dto.CustomerResponse, *errs.AppError) {
+func (s DefaultCustomerService) GetAllCustomers(status string) ([]domain.Customer, *errs.AppError) {
 	if status == "active" {
 		status = "1"
 	} else if status == "inactive" {
@@ -27,19 +26,19 @@ func (s DefaultCustomerService) GetAllCustomers(status string) ([]dto.CustomerRe
 	if err != nil {
 		return nil, err
 	}
-	customersResponse := make([]dto.CustomerResponse, 0)
+	customersResponse := make([]domain.Customer, 0)
 	for _, customer := range customers {
-		customersResponse = append(customersResponse, *customer.AsDto())
+		customersResponse = append(customersResponse, customer)
 	}
 	return customersResponse, nil
 }
 
-func (s DefaultCustomerService) GetCustomerById(id int32) (*dto.CustomerResponse, *errs.AppError) {
+func (s DefaultCustomerService) GetCustomerById(id int32) (*domain.Customer, *errs.AppError) {
 	c, err := s.repo.FindById(id)
 	if err != nil {
 		return nil, err
 	}
-	return c.AsDto(), nil
+	return c, nil
 }
 
 func NewCustomerService(repo domain.CustomerRepository) DefaultCustomerService {
