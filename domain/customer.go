@@ -34,6 +34,7 @@ type Customer struct {
 // }
 
 type CustomerRepository interface {
+	Create(customer Customer) (*Customer, *errs.AppError)
 	FindAll(status string) ([]Customer, *errs.AppError)
 	FindById(id int32) (*Customer, *errs.AppError)
 }

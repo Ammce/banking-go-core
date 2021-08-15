@@ -10,6 +10,14 @@ type CustomerRepositoryDB struct {
 	db *gorm.DB
 }
 
+func (cp CustomerRepositoryDB) Create(customer Customer) (*Customer, *errs.AppError) {
+	err := cp.db.Create(&customer).Error
+	if err != nil {
+		return nil, errs.NewUnexpectedError("Creation of customer failed")
+	}
+	return &customer, nil
+}
+
 func (p CustomerRepositoryDB) FindAll(status string) ([]Customer, *errs.AppError) {
 	var err error
 	customers := []Customer{}

@@ -1,4 +1,4 @@
-package customer
+package customerDTO
 
 import "github.com/Ammce/go-banking-core/errs"
 
