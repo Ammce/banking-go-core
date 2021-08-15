@@ -6,13 +6,13 @@ import (
 )
 
 type CreateTransactionDTO struct {
-	AccountID       uuid.UUID `json:"account_id"`
-	Amount          int64     `json:"amount"`
-	TransactionDate string    `json:"transaction_date"`
+	AccountID uuid.UUID `json:"account_id"`
+	Amount    int64     `json:"amount"`
 }
 
 func (ct CreateTransactionDTO) Validate() *errs.AppError {
 	if ct.Amount < 1 {
 		return errs.NewValidationError("Amount of a transaction must be greater than 1")
 	}
+	return nil
 }

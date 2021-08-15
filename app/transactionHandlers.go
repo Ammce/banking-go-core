@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Ammce/go-banking-core/domain"
+	"github.com/Ammce/go-banking-core/dto"
 	"github.com/Ammce/go-banking-core/service"
 )
 
@@ -13,7 +13,7 @@ type TransactionHandlers struct {
 }
 
 func (th TransactionHandlers) createTransaction(w http.ResponseWriter, r *http.Request) {
-	var body domain.Transaction
+	var body dto.CreateTransactionDTO
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
 		writeReponse(w, http.StatusBadRequest, err.Error())

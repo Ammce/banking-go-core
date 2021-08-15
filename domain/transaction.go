@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"time"
+
 	"github.com/Ammce/go-banking-core/errs"
 	"github.com/google/uuid"
 )
@@ -14,4 +16,14 @@ type Transaction struct {
 
 type TransactionRepository interface {
 	Create(t Transaction) (*Transaction, *errs.AppError)
+}
+
+func NewTransaction(AccountID uuid.UUID, Amount int64) Transaction {
+	currentTime := time.Now()
+	return Transaction{
+		TransactionID:   uuid.New(),
+		AccountID:       AccountID,
+		Amount:          Amount,
+		TransactionDate: currentTime.Format("2006-01-02 15:04:05"),
+	}
 }
