@@ -3,6 +3,7 @@ package domain
 import (
 	"time"
 
+	"github.com/Ammce/go-banking-core/dto"
 	"github.com/Ammce/go-banking-core/errs"
 	"github.com/google/uuid"
 )
@@ -24,5 +25,14 @@ func NewTransaction(AccountID uuid.UUID, Amount int64) Transaction {
 		AccountID:       AccountID,
 		Amount:          Amount,
 		TransactionDate: currentTime.Format("2006-01-02 15:04:05"),
+	}
+}
+
+func (t Transaction) ToTransactionResponseDTO() *dto.TransactionResponseDTO {
+	return &dto.TransactionResponseDTO{
+		TransactionID:   t.TransactionID,
+		AccountID:       t.AccountID,
+		TransactionDate: t.TransactionDate,
+		Amount:          t.Amount,
 	}
 }

@@ -7,14 +7,14 @@ import (
 )
 
 type TransactionService interface {
-	Create(t dto.CreateTransactionDTO) (*domain.Transaction, *errs.AppError)
+	Create(t dto.CreateTransactionDTO) (*dto.TransactionResponseDTO, *errs.AppError)
 }
 
 type DefaultTransactionService struct {
 	repo domain.TransactionRepositoryDB
 }
 
-func (ts DefaultTransactionService) Create(t dto.CreateTransactionDTO) (*domain.Transaction, *errs.AppError) {
+func (ts DefaultTransactionService) Create(t dto.CreateTransactionDTO) (*dto.TransactionResponseDTO, *errs.AppError) {
 	validationError := t.Validate()
 	if validationError != nil {
 		return nil, validationError
@@ -25,7 +25,7 @@ func (ts DefaultTransactionService) Create(t dto.CreateTransactionDTO) (*domain.
 	if creationError != nil {
 		return nil, creationError
 	}
-	return createdTransaction, nil
+	return createdTransaction.ToTransactionResponseDTO(), nil
 }
 
 func NewTransactionService(repo domain.TransactionRepositoryDB) DefaultTransactionService {
