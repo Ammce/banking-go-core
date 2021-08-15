@@ -17,14 +17,6 @@ type Customer struct {
 	Status      string
 }
 
-// func (c Customer) statusToText() string {
-// 	status := "active"
-// 	if c.Status == "0" {
-// 		status = "inactive"
-// 	}
-// 	return status
-// }
-
 func (c Customer) AsResponseDto() *customerDTO.CustomerResponse {
 	return &customerDTO.CustomerResponse{
 		ID:          c.ID,

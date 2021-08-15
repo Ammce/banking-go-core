@@ -9,7 +9,7 @@ import (
 type CustomerService interface {
 	CreateCustomer(customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError)
 	GetAllCustomers(status string) ([]domain.Customer, *errs.AppError)
-	GetCustomerById(id int32) (*domain.Customer, *errs.AppError)
+	GetCustomerById(id int32) (*customerDTO.CustomerResponse, *errs.AppError)
 }
 
 type DefaultCustomerService struct {
@@ -48,12 +48,12 @@ func (s DefaultCustomerService) GetAllCustomers(status string) ([]domain.Custome
 	return customersResponse, nil
 }
 
-func (s DefaultCustomerService) GetCustomerById(id int32) (*domain.Customer, *errs.AppError) {
+func (s DefaultCustomerService) GetCustomerById(id int32) (*customerDTO.CustomerResponse, *errs.AppError) {
 	c, err := s.repo.FindById(id)
 	if err != nil {
 		return nil, err
 	}
-	return c, nil
+	return c.AsResponseDto(), nil
 }
 
 func NewCustomerService(repo domain.CustomerRepository) DefaultCustomerService {
