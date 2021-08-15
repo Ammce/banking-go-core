@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"github.com/Ammce/go-banking-core/dto/customerDTO"
 	"github.com/Ammce/go-banking-core/errs"
 	"gorm.io/gorm"
 )
@@ -37,4 +38,14 @@ type CustomerRepository interface {
 	Create(customer Customer) (*Customer, *errs.AppError)
 	FindAll(status string) ([]Customer, *errs.AppError)
 	FindById(id int32) (*Customer, *errs.AppError)
+}
+
+func NewCustomer(ccDTO customerDTO.CreateCustomer) Customer {
+	return Customer{
+		Name:        ccDTO.Name,
+		City:        ccDTO.City,
+		Zipcode:     ccDTO.Zipcode,
+		DateOfBirth: ccDTO.DateofBirth,
+		Status:      ccDTO.Status,
+	}
 }

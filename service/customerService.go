@@ -2,16 +2,31 @@ package service
 
 import (
 	"github.com/Ammce/go-banking-core/domain"
+	"github.com/Ammce/go-banking-core/dto/customerDTO"
 	"github.com/Ammce/go-banking-core/errs"
 )
 
 type CustomerService interface {
+	CreateCustomer(customer customerDTO.CreateCustomer) (*domain.Customer, *errs.AppError)
 	GetAllCustomers(status string) ([]domain.Customer, *errs.AppError)
 	GetCustomerById(id int32) (*domain.Customer, *errs.AppError)
 }
 
 type DefaultCustomerService struct {
 	repo domain.CustomerRepository
+}
+
+func (cs DefaultCustomerService) CreateCustomer(customer customerDTO.CreateCustomer) (*domain.Customer, *errs.AppError) {
+	verr := customer.Validate()
+	if verr != nil {
+		return nil, verr
+	}
+	domainCustomer := domain.NewCustomer(customer)
+	c, err := cs.repo.Create(domainCustomer)
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
 }
 
 func (s DefaultCustomerService) GetAllCustomers(status string) ([]domain.Customer, *errs.AppError) {
