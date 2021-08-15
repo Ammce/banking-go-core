@@ -7,7 +7,7 @@ import (
 )
 
 type CustomerService interface {
-	CreateCustomer(customer customerDTO.CreateCustomer) (*domain.Customer, *errs.AppError)
+	CreateCustomer(customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError)
 	GetAllCustomers(status string) ([]domain.Customer, *errs.AppError)
 	GetCustomerById(id int32) (*domain.Customer, *errs.AppError)
 }
@@ -16,7 +16,7 @@ type DefaultCustomerService struct {
 	repo domain.CustomerRepository
 }
 
-func (cs DefaultCustomerService) CreateCustomer(customer customerDTO.CreateCustomer) (*domain.Customer, *errs.AppError) {
+func (cs DefaultCustomerService) CreateCustomer(customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError) {
 	verr := customer.Validate()
 	if verr != nil {
 		return nil, verr
@@ -26,7 +26,7 @@ func (cs DefaultCustomerService) CreateCustomer(customer customerDTO.CreateCusto
 	if err != nil {
 		return nil, err
 	}
-	return c, nil
+	return c.AsResponseDto(), nil
 }
 
 func (s DefaultCustomerService) GetAllCustomers(status string) ([]domain.Customer, *errs.AppError) {

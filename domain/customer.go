@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"database/sql"
+
 	"github.com/Ammce/go-banking-core/dto/customerDTO"
 	"github.com/Ammce/go-banking-core/errs"
 	"gorm.io/gorm"
@@ -23,16 +25,19 @@ type Customer struct {
 // 	return status
 // }
 
-// func (c Customer) AsDto() *dto.CustomerResponse {
-// 	return &dto.CustomerResponse{
-// 		Id:          c.Id,
-// 		Name:        c.Name,
-// 		City:        c.City,
-// 		Zipcode:     c.Zipcode,
-// 		DateofBirth: c.DateofBirth,
-// 		Status:      c.statusToText(),
-// 	}
-// }
+func (c Customer) AsResponseDto() *customerDTO.CustomerResponse {
+	return &customerDTO.CustomerResponse{
+		ID:          c.ID,
+		Name:        c.Name,
+		City:        c.City,
+		Zipcode:     c.Zipcode,
+		DateofBirth: c.DateOfBirth,
+		Status:      c.Status,
+		CreatedAt:   c.CreatedAt,
+		UpdatedAt:   c.UpdatedAt,
+		DeletedAt:   sql.NullTime(c.DeletedAt),
+	}
+}
 
 type CustomerRepository interface {
 	Create(customer Customer) (*Customer, *errs.AppError)
