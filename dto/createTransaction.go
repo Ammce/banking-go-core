@@ -1,17 +1,18 @@
-package domain
+package dto
 
 import (
 	"github.com/Ammce/go-banking-core/errs"
 	"github.com/google/uuid"
 )
 
-type Transaction struct {
-	TransactionID   uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+type CreateTransactionDTO struct {
 	AccountID       uuid.UUID `json:"account_id"`
 	Amount          int64     `json:"amount"`
 	TransactionDate string    `json:"transaction_date"`
 }
 
-type TransactionRepository interface {
-	Create(t Transaction) (*Transaction, *errs.AppError)
+func (ct CreateTransactionDTO) Validate() *errs.AppError {
+	if ct.Amount < 1 {
+		return errs.NewValidationError("Amount of a transaction must be greater than 1")
+	}
 }
