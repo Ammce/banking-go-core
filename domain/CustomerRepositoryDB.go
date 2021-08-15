@@ -19,8 +19,7 @@ func (cr CustomerRepositoryDB) Create(customer Customer) (*Customer, *errs.AppEr
 }
 
 func (cr CustomerRepositoryDB) Update(id int32, customer Customer) (*Customer, *errs.AppError) {
-
-	err := cr.db.Model(&Customer{}).Where("id = ?", id).Updates(Customer{Name: customer.Name, Zipcode: customer.Zipcode, City: customer.City})
+	err := cr.db.Model(&Customer{}).Where("id = ?", id).Updates(Customer{Name: customer.Name, Zipcode: customer.Zipcode, City: customer.City}).Error
 	if err != nil {
 		return nil, errs.NewUnexpectedError("Update of customer failed")
 	}
