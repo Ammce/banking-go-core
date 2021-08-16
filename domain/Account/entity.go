@@ -11,6 +11,6 @@ type Account struct {
 	AccountType string
 	Amount      float64
 	Status      string
-	CustomerID  string
+	CustomerID  uint
 	Customer    customer.Customer `gorm:"foreignKey:CustomerID"`
 }
