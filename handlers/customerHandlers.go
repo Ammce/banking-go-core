@@ -32,7 +32,7 @@ func (ch CustomerHandlers) CreateCustomer(w http.ResponseWriter, r *http.Request
 func (ch CustomerHandlers) UpdateCustomer(w http.ResponseWriter, r *http.Request) {
 	var body customerDTO.CreateCustomer
 	err := json.NewDecoder(r.Body).Decode(&body)
-	customerId := getCustomerIdFromRequest(r)
+	customerId := getIdFromRequest(r, "id")
 	if err != nil {
 		writeReponse(w, http.StatusBadRequest, err)
 	} else {
@@ -56,9 +56,8 @@ func (ch CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reques
 }
 
 func (ch *CustomerHandlers) GetCustomerById(w http.ResponseWriter, r *http.Request) {
-	customerId64, _ := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
-	customerId32 := int32(customerId64)
-	customer, err := ch.service.GetCustomerById(customerId32)
+	customerId := getIdFromRequest(r, "id")
+	customer, err := ch.service.GetCustomerById(customerId)
 	if err != nil {
 		writeReponse(w, err.Code, err.AsMessage())
 	} else {
@@ -75,20 +74,6 @@ func (ch *CustomerHandlers) DeleteCustomerById(w http.ResponseWriter, r *http.Re
 	} else {
 		writeReponse(w, http.StatusOK, nil)
 	}
-}
-
-func writeReponse(w http.ResponseWriter, code int, data interface{}) {
-	w.Header().Add("Content-type", "application/json")
-	w.WriteHeader(code)
-	if err := json.NewEncoder(w).Encode(data); err != nil {
-		panic(err)
-	}
-}
-
-func getCustomerIdFromRequest(r *http.Request) int32 {
-	customerId64, _ := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
-	customerId32 := int32(customerId64)
-	return customerId32
 }
 
 func NewCustomerHandlers(service customer.CustomerService) CustomerHandlers {
