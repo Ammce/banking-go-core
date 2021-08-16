@@ -3,11 +3,9 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	customer "github.com/Ammce/go-banking-core/domain/Customer"
 	"github.com/Ammce/go-banking-core/dto/customerDTO"
-	"github.com/gorilla/mux"
 )
 
 type CustomerHandlers struct {
@@ -66,9 +64,8 @@ func (ch *CustomerHandlers) GetCustomerById(w http.ResponseWriter, r *http.Reque
 }
 
 func (ch *CustomerHandlers) DeleteCustomerById(w http.ResponseWriter, r *http.Request) {
-	customerId64, _ := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
-	customerId32 := int32(customerId64)
-	err := ch.service.DeleteCustomerById(customerId32)
+	customerId := getIdFromRequest(r, "id")
+	err := ch.service.DeleteCustomerById(customerId)
 	if err != nil {
 		writeReponse(w, err.Code, err.AsMessage())
 	} else {

@@ -7,10 +7,10 @@ import (
 
 type CustomerService interface {
 	CreateCustomer(customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError)
-	UpdateCustomer(id int32, customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError)
+	UpdateCustomer(id uint, customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError)
 	GetAllCustomers(status string) (*[]customerDTO.CustomerResponse, *errs.AppError)
-	GetCustomerById(id int32) (*customerDTO.CustomerResponse, *errs.AppError)
-	DeleteCustomerById(id int32) *errs.AppError
+	GetCustomerById(id uint) (*customerDTO.CustomerResponse, *errs.AppError)
+	DeleteCustomerById(id uint) *errs.AppError
 }
 
 type DefaultCustomerService struct {
@@ -30,7 +30,7 @@ func (cs DefaultCustomerService) CreateCustomer(customer customerDTO.CreateCusto
 	return c.AsResponseDto(), nil
 }
 
-func (cs DefaultCustomerService) UpdateCustomer(id int32, customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError) {
+func (cs DefaultCustomerService) UpdateCustomer(id uint, customer customerDTO.CreateCustomer) (*customerDTO.CustomerResponse, *errs.AppError) {
 	verr := customer.Validate()
 	if verr != nil {
 		return nil, verr
@@ -55,14 +55,14 @@ func (s DefaultCustomerService) GetAllCustomers(status string) (*[]customerDTO.C
 	return &customersResponse, nil
 }
 
-func (s DefaultCustomerService) GetCustomerById(id int32) (*customerDTO.CustomerResponse, *errs.AppError) {
+func (s DefaultCustomerService) GetCustomerById(id uint) (*customerDTO.CustomerResponse, *errs.AppError) {
 	c, err := s.repo.FindById(id)
 	if err != nil {
 		return nil, err
 	}
 	return c.AsResponseDto(), nil
 }
-func (s DefaultCustomerService) DeleteCustomerById(id int32) *errs.AppError {
+func (s DefaultCustomerService) DeleteCustomerById(id uint) *errs.AppError {
 	err := s.repo.DeleteById(id)
 	if err != nil {
 		return err

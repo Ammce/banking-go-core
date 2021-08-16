@@ -19,7 +19,7 @@ func (cr CustomerRepositoryDB) Create(customer customerDomain.Customer) (*custom
 	return &customer, nil
 }
 
-func (cr CustomerRepositoryDB) Update(id int32, customer customerDomain.Customer) (*customerDomain.Customer, *errs.AppError) {
+func (cr CustomerRepositoryDB) Update(id uint, customer customerDomain.Customer) (*customerDomain.Customer, *errs.AppError) {
 	err := cr.db.Model(&customerDomain.Customer{}).Where("id = ?", id).Updates(customerDomain.Customer{Name: customer.Name, Zipcode: customer.Zipcode, City: customer.City}).Error
 	if err != nil {
 		return nil, errs.NewUnexpectedError("Update of customer failed")
@@ -42,7 +42,7 @@ func (cr CustomerRepositoryDB) FindAll(status string) ([]customerDomain.Customer
 	return customers, nil
 }
 
-func (cr CustomerRepositoryDB) FindById(id int32) (*customerDomain.Customer, *errs.AppError) {
+func (cr CustomerRepositoryDB) FindById(id uint) (*customerDomain.Customer, *errs.AppError) {
 	var err error
 	customer := customerDomain.Customer{}
 	err = cr.db.Where("id = ?", id).First(&customer).Error
@@ -53,7 +53,7 @@ func (cr CustomerRepositoryDB) FindById(id int32) (*customerDomain.Customer, *er
 	return &customer, nil
 }
 
-func (cr CustomerRepositoryDB) DeleteById(id int32) *errs.AppError {
+func (cr CustomerRepositoryDB) DeleteById(id uint) *errs.AppError {
 	err := cr.db.Delete(&customerDomain.Customer{}, id).Error
 	if err != nil {
 		return errs.NewNotFoundError("Database deletition error")

@@ -16,8 +16,8 @@ func writeReponse(w http.ResponseWriter, code int, data interface{}) {
 	}
 }
 
-func getIdFromRequest(r *http.Request, variable string) int32 {
-	customerId64, _ := strconv.ParseInt(mux.Vars(r)[variable], 10, 32)
-	customerId32 := int32(customerId64)
-	return customerId32
+func getIdFromRequest(r *http.Request, variable string) uint {
+	Id64, _ := strconv.ParseInt(mux.Vars(r)[variable], 10, 32)
+	Id32 := int32(Id64)
+	return uint(Id32)
 }
