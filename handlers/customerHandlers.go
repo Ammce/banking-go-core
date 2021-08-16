@@ -1,4 +1,4 @@
-package app
+package handlers
 
 import (
 	"encoding/json"
@@ -14,7 +14,7 @@ type CustomerHandlers struct {
 	service customer.CustomerService
 }
 
-func (ch *CustomerHandlers) createCustomer(w http.ResponseWriter, r *http.Request) {
+func (ch CustomerHandlers) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	var body customerDTO.CreateCustomer
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
@@ -29,7 +29,7 @@ func (ch *CustomerHandlers) createCustomer(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-func (ch *CustomerHandlers) updateCustomer(w http.ResponseWriter, r *http.Request) {
+func (ch CustomerHandlers) UpdateCustomer(w http.ResponseWriter, r *http.Request) {
 	var body customerDTO.CreateCustomer
 	err := json.NewDecoder(r.Body).Decode(&body)
 	customerId := getCustomerIdFromRequest(r)
@@ -45,7 +45,7 @@ func (ch *CustomerHandlers) updateCustomer(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+func (ch CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Request) {
 	status := r.URL.Query().Get("status")
 	customers, err := ch.service.GetAllCustomers(status)
 	if err != nil {
@@ -55,7 +55,7 @@ func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (ch *CustomerHandlers) getCustomerById(w http.ResponseWriter, r *http.Request) {
+func (ch *CustomerHandlers) GetCustomerById(w http.ResponseWriter, r *http.Request) {
 	customerId64, _ := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
 	customerId32 := int32(customerId64)
 	customer, err := ch.service.GetCustomerById(customerId32)
@@ -66,7 +66,7 @@ func (ch *CustomerHandlers) getCustomerById(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (ch *CustomerHandlers) deleteCustomerById(w http.ResponseWriter, r *http.Request) {
+func (ch *CustomerHandlers) DeleteCustomerById(w http.ResponseWriter, r *http.Request) {
 	customerId64, _ := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
 	customerId32 := int32(customerId64)
 	err := ch.service.DeleteCustomerById(customerId32)
@@ -89,4 +89,10 @@ func getCustomerIdFromRequest(r *http.Request) int32 {
 	customerId64, _ := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
 	customerId32 := int32(customerId64)
 	return customerId32
+}
+
+func NewCustomerHandlers(service customer.CustomerService) CustomerHandlers {
+	return CustomerHandlers{
+		service: service,
+	}
 }

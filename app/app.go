@@ -7,7 +7,9 @@ import (
 	customerAdapter "github.com/Ammce/go-banking-core/adapters/Customer"
 	"github.com/Ammce/go-banking-core/domain"
 	customerPort "github.com/Ammce/go-banking-core/domain/Customer"
+	"github.com/Ammce/go-banking-core/handlers"
 	"github.com/Ammce/go-banking-core/logger"
+	"github.com/Ammce/go-banking-core/routes"
 	"github.com/Ammce/go-banking-core/service"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
@@ -15,7 +17,7 @@ import (
 )
 
 func Start() {
-	router := mux.NewRouter()
+	router := mux.NewRouter().StrictSlash(true)
 
 	dbClient := createDatabase()
 
@@ -23,17 +25,15 @@ func Start() {
 	accountRepositoryDB := domain.NewAccountingRepositoryDB(dbClient)
 	transactionRepositoryDB := domain.NewTransactionRepositoryDB(dbClient)
 
-	ch := CustomerHandlers{service: customerPort.NewCustomerService(customerRepositoryDB)}
+	ch := handlers.NewCustomerHandlers(customerPort.NewCustomerService(customerRepositoryDB))
 	ah := AccountHandlers{service: service.NewAccountService(accountRepositoryDB)}
 	th := TransactionHandlers{service: service.NewTransactionService(transactionRepositoryDB)}
 
 	router.HandleFunc("/transactions", th.createTransaction).Methods(http.MethodPost)
-	router.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
-	router.HandleFunc("/customers", ch.createCustomer).Methods(http.MethodPost)
-	router.HandleFunc("/customers/{id:[0-9]+}", ch.getCustomerById).Methods(http.MethodGet)
-	router.HandleFunc("/customers/{id:[0-9]+}", ch.deleteCustomerById).Methods(http.MethodDelete)
-	router.HandleFunc("/customers/{id:[0-9]+}", ch.updateCustomer).Methods(http.MethodPatch)
 	router.HandleFunc("/customers/{id:[0-9]+}/account", ah.createAccount).Methods(http.MethodPost)
+
+	customerRouter := router.PathPrefix("/customers").Subrouter()
+	routes.NewCustomerRoutes(customerRouter, ch)
 
 	log.Fatal(http.ListenAndServe("localhost:8080", router))
 }

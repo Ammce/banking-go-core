@@ -30,3 +30,11 @@ func (ah *AccountHandlers) createAccount(w http.ResponseWriter, r *http.Request)
 		}
 	}
 }
+
+func writeReponse(w http.ResponseWriter, code int, data interface{}) {
+	w.Header().Add("Content-type", "application/json")
+	w.WriteHeader(code)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		panic(err)
+	}
+}
