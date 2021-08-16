@@ -6,6 +6,7 @@ import (
 
 	customerAdapter "github.com/Ammce/go-banking-core/adapters/Customer"
 	"github.com/Ammce/go-banking-core/domain"
+	accountPort "github.com/Ammce/go-banking-core/domain/Account"
 	customerPort "github.com/Ammce/go-banking-core/domain/Customer"
 	"github.com/Ammce/go-banking-core/handlers"
 	"github.com/Ammce/go-banking-core/logger"
@@ -44,7 +45,7 @@ func createDatabase() *gorm.DB {
 	dsn := "host=localhost user=postgres password=postgres dbname=banking port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	db.AutoMigrate(&customerPort.Customer{})
+	db.AutoMigrate(&customerPort.Customer{}, &accountPort.Account{})
 	// db.AutoMigrate(&domain.Customer{}, &domain.Account{}, domain.Transaction{})
 
 	if err != nil {
