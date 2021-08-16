@@ -6,14 +6,12 @@ import (
 
 	accountAdapter "github.com/Ammce/go-banking-core/adapters/Account"
 	customerAdapter "github.com/Ammce/go-banking-core/adapters/Customer"
-	"github.com/Ammce/go-banking-core/domain"
 	accountPort "github.com/Ammce/go-banking-core/domain/Account"
 	customerPort "github.com/Ammce/go-banking-core/domain/Customer"
 	"github.com/Ammce/go-banking-core/handlers"
 	"github.com/Ammce/go-banking-core/logger"
 	"github.com/Ammce/go-banking-core/middlewares"
 	"github.com/Ammce/go-banking-core/routes"
-	"github.com/Ammce/go-banking-core/service"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -26,13 +24,9 @@ func Start() {
 
 	customerRepositoryDB := customerAdapter.NewCustomerRepositoryDB(dbClient)
 	accountRepositoryDB := accountAdapter.NewAccountRepositoryDB(dbClient)
-	transactionRepositoryDB := domain.NewTransactionRepositoryDB(dbClient)
 
 	ch := handlers.NewCustomerHandlers(customerPort.NewCustomerService(customerRepositoryDB))
 	ah := handlers.NewAccountHandlers(accountPort.NewAccountService(accountRepositoryDB))
-	th := TransactionHandlers{service: service.NewTransactionService(transactionRepositoryDB)}
-
-	router.HandleFunc("/transactions", th.createTransaction).Methods(http.MethodPost)
 
 	customerRouter := router.PathPrefix("/customers").Subrouter()
 	accountRouter := router.PathPrefix("/customers/{id:[0-9]+}/accounts").Subrouter()
