@@ -9,6 +9,7 @@ import (
 	customerPort "github.com/Ammce/go-banking-core/domain/Customer"
 	"github.com/Ammce/go-banking-core/handlers"
 	"github.com/Ammce/go-banking-core/logger"
+	"github.com/Ammce/go-banking-core/middlewares"
 	"github.com/Ammce/go-banking-core/routes"
 	"github.com/Ammce/go-banking-core/service"
 	"github.com/gorilla/mux"
@@ -34,6 +35,7 @@ func Start() {
 
 	customerRouter := router.PathPrefix("/customers").Subrouter()
 	routes.NewCustomerRoutes(customerRouter, ch)
+	router.Use(middlewares.LoggingMiddleware)
 
 	log.Fatal(http.ListenAndServe("localhost:8080", router))
 }
