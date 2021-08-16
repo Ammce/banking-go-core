@@ -6,14 +6,14 @@ import (
 )
 
 type AccountService interface {
-	CreateAccount(adto *accountDTO.CreateAccountDTO) (*Account, *errs.AppError)
+	CreateAccount(adto *accountDTO.CreateAccountDTO) (*accountDTO.CreateAccountResponse, *errs.AppError)
 }
 
 type DefaultAccountService struct {
 	repo AccountRepository
 }
 
-func (as DefaultAccountService) CreateAccount(caDTO *accountDTO.CreateAccountDTO) (*Account, *errs.AppError) {
+func (as DefaultAccountService) CreateAccount(caDTO *accountDTO.CreateAccountDTO) (*accountDTO.CreateAccountResponse, *errs.AppError) {
 	validationError := caDTO.Validate()
 	if validationError != nil {
 		return nil, validationError
@@ -23,7 +23,7 @@ func (as DefaultAccountService) CreateAccount(caDTO *accountDTO.CreateAccountDTO
 	if err != nil {
 		return nil, err
 	}
-	return acc, nil
+	return acc.asResponseDto(), nil
 }
 
 func NewAccountService(repo AccountRepository) DefaultAccountService {
