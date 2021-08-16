@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	accountAdapter "github.com/Ammce/go-banking-core/adapters/Account"
 	customerAdapter "github.com/Ammce/go-banking-core/adapters/Customer"
 	"github.com/Ammce/go-banking-core/domain"
 	accountPort "github.com/Ammce/go-banking-core/domain/Account"
@@ -24,18 +25,20 @@ func Start() {
 	dbClient := createDatabase()
 
 	customerRepositoryDB := customerAdapter.NewCustomerRepositoryDB(dbClient)
-	accountRepositoryDB := domain.NewAccountingRepositoryDB(dbClient)
+	accountRepositoryDB := accountAdapter.NewAccountRepositoryDB(dbClient)
 	transactionRepositoryDB := domain.NewTransactionRepositoryDB(dbClient)
 
 	ch := handlers.NewCustomerHandlers(customerPort.NewCustomerService(customerRepositoryDB))
-	ah := AccountHandlers{service: service.NewAccountService(accountRepositoryDB)}
+	ah := handlers.NewAccountHandlers(accountPort.NewAccountService(accountRepositoryDB))
 	th := TransactionHandlers{service: service.NewTransactionService(transactionRepositoryDB)}
 
 	router.HandleFunc("/transactions", th.createTransaction).Methods(http.MethodPost)
-	router.HandleFunc("/customers/{id:[0-9]+}/account", ah.createAccount).Methods(http.MethodPost)
 
 	customerRouter := router.PathPrefix("/customers").Subrouter()
+	accountRouter := router.PathPrefix("/customers/{id:[0-9]+}/accounts").Subrouter()
 	routes.NewCustomerRoutes(customerRouter, ch)
+	routes.NewAccountRoutes(accountRouter, ah)
+
 	router.Use(middlewares.LoggingMiddleware)
 
 	log.Fatal(http.ListenAndServe("localhost:8080", router))

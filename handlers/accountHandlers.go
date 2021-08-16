@@ -12,7 +12,7 @@ type AccountHandlers struct {
 	service account.AccountService
 }
 
-func (ah *AccountHandlers) createAccount(w http.ResponseWriter, r *http.Request) {
+func (ah *AccountHandlers) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	customerId := getIdFromRequest(r, "id")
 	var body accountDTO.CreateAccountDTO
 	err := json.NewDecoder(r.Body).Decode(&body)
@@ -26,5 +26,11 @@ func (ah *AccountHandlers) createAccount(w http.ResponseWriter, r *http.Request)
 		} else {
 			writeReponse(w, http.StatusOK, account)
 		}
+	}
+}
+
+func NewAccountHandlers(service account.AccountService) AccountHandlers {
+	return AccountHandlers{
+		service: service,
 	}
 }

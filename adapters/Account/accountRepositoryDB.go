@@ -11,7 +11,7 @@ type AccountRepositoryDB struct {
 	db *gorm.DB
 }
 
-func (ar AccountRepositoryDB) Save(a *account.Account) (*account.Account, *errs.AppError) {
+func (ar AccountRepositoryDB) Create(a *account.Account) (*account.Account, *errs.AppError) {
 	result := ar.db.Create(&a)
 	if result.Error != nil {
 		logger.Error("Error while creating account - " + result.Error.Error())
