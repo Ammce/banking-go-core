@@ -1,6 +1,10 @@
 package transaction
 
-import "github.com/Ammce/go-banking-core/errs"
+import (
+	"fmt"
+
+	"github.com/Ammce/go-banking-core/errs"
+)
 
 type TransactionService interface {
 	CreateTransaction(t Transaction) (*Transaction, *errs.AppError)
@@ -11,6 +15,7 @@ type DefaultTransactionService struct {
 }
 
 func (ts DefaultTransactionService) CreateTransaction(t Transaction) (*Transaction, *errs.AppError) {
+	fmt.Println(t.AccountFromID)
 	transaction, err := ts.repo.Create(t)
 	if err != nil {
 		return nil, err
