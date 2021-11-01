@@ -11,7 +11,7 @@ type DefaultTransactionService struct {
 }
 
 func (ts DefaultTransactionService) CreateTransaction(t Transaction) (*Transaction, *errs.AppError) {
-	transaction, err := ts.CreateTransaction(t)
+	transaction, err := ts.repo.Create(t)
 	if err != nil {
 		return nil, err
 	}
