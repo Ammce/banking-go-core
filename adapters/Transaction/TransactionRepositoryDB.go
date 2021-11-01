@@ -17,3 +17,9 @@ func (tr TransactionRepositoryDB) Create(transaction transactionDomain.Transacti
 	}
 	return &transaction, nil
 }
+
+func NewTransactionRepositoryDB(db *gorm.DB) TransactionRepositoryDB {
+	return TransactionRepositoryDB{
+		db: db,
+	}
+}

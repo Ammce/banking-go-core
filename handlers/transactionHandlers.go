@@ -26,3 +26,9 @@ func (ts TransactionHandlers) CreateTransaction(w http.ResponseWriter, r *http.R
 	}
 
 }
+
+func NewTransactionHandlers(service transaction.TransactionService) TransactionHandlers {
+	return TransactionHandlers{
+		service: service,
+	}
+}

@@ -6,8 +6,10 @@ import (
 
 	accountAdapter "github.com/Ammce/go-banking-core/adapters/Account"
 	customerAdapter "github.com/Ammce/go-banking-core/adapters/Customer"
+	transactionAdapter "github.com/Ammce/go-banking-core/adapters/Transaction"
 	accountPort "github.com/Ammce/go-banking-core/domain/Account"
 	customerPort "github.com/Ammce/go-banking-core/domain/Customer"
+	transactionPort "github.com/Ammce/go-banking-core/domain/Transaction"
 	"github.com/Ammce/go-banking-core/handlers"
 	"github.com/Ammce/go-banking-core/logger"
 	"github.com/Ammce/go-banking-core/middlewares"
@@ -24,9 +26,11 @@ func Start() {
 
 	customerRepositoryDB := customerAdapter.NewCustomerRepositoryDB(dbClient)
 	accountRepositoryDB := accountAdapter.NewAccountRepositoryDB(dbClient)
+	transactionRepositoryDB := transactionAdapter.NewTransactionRepositoryDB(dbClient)
 
 	ch := handlers.NewCustomerHandlers(customerPort.NewCustomerService(customerRepositoryDB))
 	ah := handlers.NewAccountHandlers(accountPort.NewAccountService(accountRepositoryDB))
+	th := handlers.NewTransactionHandlers(transactionPort.NewTransactionService(transactionRepositoryDB))
 
 	customerRouter := router.PathPrefix("/customers").Subrouter()
 	accountRouter := router.PathPrefix("/customers/{id:[0-9]+}/accounts").Subrouter()
