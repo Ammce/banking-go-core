@@ -33,9 +33,11 @@ func Start() {
 	th := handlers.NewTransactionHandlers(transactionPort.NewTransactionService(transactionRepositoryDB))
 
 	customerRouter := router.PathPrefix("/customers").Subrouter()
+	transactionRouter := router.PathPrefix("/transactions").Subrouter()
 	accountRouter := router.PathPrefix("/customers/{id:[0-9]+}/accounts").Subrouter()
 	routes.NewCustomerRoutes(customerRouter, ch)
 	routes.NewAccountRoutes(accountRouter, ah)
+	routes.NewTransactionRoutes(transactionRouter, th)
 
 	router.Use(middlewares.LoggingMiddleware)
 
@@ -46,7 +48,7 @@ func createDatabase() *gorm.DB {
 	dsn := "host=localhost user=postgres password=postgres dbname=banking port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	db.AutoMigrate(&customerPort.Customer{}, &accountPort.Account{})
+	db.AutoMigrate(&customerPort.Customer{}, &accountPort.Account{}, &transactionPort.Transaction{})
 	// db.AutoMigrate(&domain.Customer{}, &domain.Account{}, domain.Transaction{})
 
 	if err != nil {

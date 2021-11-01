@@ -7,8 +7,10 @@ import (
 
 type Transaction struct {
 	gorm.Model
-	Amount     float64
-	AcountFrom account.Account `gorm:"foreignKey:AccountID"`
-	AcountTo   account.Account `gorm:"foreignKey:AccountID"`
-	Status     string
+	Amount        float64
+	AccountFrom   account.Account `gorm:"foreignKey:AccountFromID"`
+	AccountFromID uint
+	AccountTo     account.Account `gorm:"foreignKey:AccountToID"`
+	AccountToID   uint
+	Status        string
 }
